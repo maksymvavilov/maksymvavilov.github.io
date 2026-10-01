@@ -18,6 +18,9 @@
 <meta property="og:image" content="https://maksymvavilov.github.io/assets/img/maksym.jpg">
 <meta name="twitter:card" content="summary">
 
+<!-- The headline is the first thing painted, so the display face is fetched
+     alongside the stylesheet rather than after it. -->
+<link rel="preload" href="assets/fonts/Archivo-400700-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/style.css">
 
 <script>
@@ -70,9 +73,9 @@
 
   <section class="hero" id="top">
     <div class="wrap hero__inner">
-      <div class="hero__text">
-        <p class="badge"><span class="dot" aria-hidden="true"></span>Available for freelance &amp; contract work</p>
-        <h1>Kubernetes platform engineering</h1>
+      <p class="hero__status"><span class="dot" aria-hidden="true"></span>Available for freelance and contract work</p>
+      <h1>Kubernetes platform engineering</h1>
+      <div class="hero__body">
         <p class="tagline">Hire the outcome – delivered, documented, and ready to hand on.</p>
         <p class="lede">
           Operators and controllers, Gateway API, cloud-native DNS, and the auth plumbing
@@ -87,6 +90,27 @@
       </div>
       <img class="hero__photo" src="assets/img/maksym.jpg"
            alt="Maksym Vavilov" width="640" height="640">
+
+      <!-- The three figures that decide whether it's worth writing to me,
+           above the fold and before any of the prose. -->
+      <dl class="hero__readout">
+        <div>
+          <dt>Capacity</dt>
+          <dd>2–3 hrs/day<span class="readout__note">Monday to Friday</span></dd>
+        </div>
+        <div>
+          <dt>First reply</dt>
+          <dd>1–2 days<span class="readout__note">Then a quote, if you want one</span></dd>
+        </div>
+        <div>
+          <dt>Track record</dt>
+          <dd>5 years<span class="readout__note">Open-source Kubernetes, all of it at Red Hat</span></dd>
+        </div>
+      </dl>
+      <p class="hero__caveat">
+        I'm in full-time employment, so capacity is stated up front: a commitment you
+        can plan around rather than an optimistic promise.
+      </p>
     </div>
   </section>
 
@@ -97,39 +121,39 @@
         Six things I've done repeatedly, in production, on software other people depend on.
       </p>
 
-      <ul class="cards">
-        <li class="card">
-          <h3>Operators &amp; controllers</h3>
+      <ul class="index">
+        <li>
+          <h3>Operators and controllers</h3>
           <p>Custom operators and controllers, CRD and API design, single- and multi-cluster
              architecture. Including the unglamorous half: reconcile loops that behave,
              statuses that tell the truth, and tests that catch the bug before your users do.</p>
         </li>
-        <li class="card">
-          <h3>API gateway &amp; traffic policy</h3>
+        <li>
+          <h3>API gateway and traffic policy</h3>
           <p>Gateway API and policy-engine-style systems – rate limiting, authentication,
              DNS-based routing. I've led a gateway feature from architecture RFC through to
              a coordinated set of merged PRs across several repositories.</p>
         </li>
-        <li class="card">
-          <h3>Cloud-native DNS &amp; networking</h3>
+        <li>
+          <h3>Cloud-native DNS and networking</h3>
           <p>DNS automation for Kubernetes: health checking, endpoint generation, geo-routing,
              and multi-provider setups. I owned a DNS operator's health-check subsystem
              end to end, and the CLI that operators use to debug it.</p>
         </li>
-        <li class="card">
-          <h3>Auth &amp; secrets integration</h3>
+        <li>
+          <h3>Auth and secrets integration</h3>
           <p>Moving workloads off static, long-lived credentials and onto Vault-based,
              short-lived auth. I've made this call mid-feature and reworked three open PRs
              to do it properly rather than ship the easy thing.</p>
         </li>
-        <li class="card">
+        <li>
           <h3>AI-assisted developer tooling</h3>
           <p>Agentic workflows that survive contact with a real team: a Claude Code plugin
              adopted team-wide, automated documentation verification, and AI wired into
              review and CI in ways that help rather than generate noise.</p>
         </li>
-        <li class="card">
-          <h3>Technical writing &amp; onboarding</h3>
+        <li>
+          <h3>Technical writing and onboarding</h3>
           <p>Setup guides, observability docs, troubleshooting, and the contributor processes
              that turn a repository into a project. Good docs are cheaper than good support,
              and I enjoy writing them.</p>
@@ -142,15 +166,10 @@
     <div class="wrap">
       <h2 id="how-h">How I work</h2>
       <p class="section-lede">
-        I'm in full-time employment, so I'm honest about capacity up front – you get a
-        predictable slice of focused time rather than an optimistic promise.
+        The practical details, so you can tell whether this fits before you write to me.
       </p>
 
       <dl class="facts">
-        <div>
-          <dt>Availability</dt>
-          <dd>Monday to Friday, 2–3 hours per day.</dd>
-        </div>
         <div>
           <dt>Engagement</dt>
           <dd>Fully-scoped task delivery, or scoping and solution design end to end.
@@ -195,7 +214,11 @@
       <div class="role">
         <div class="role__head">
           <h3>Software Engineer – Kuadrant / Red&nbsp;Hat Connectivity Link</h3>
-          <p class="role__meta">Red Hat · Oct 2023 – present · Waterford, Ireland</p>
+          <p class="role__meta">
+            <span class="role__org">Red Hat</span>
+            <span class="role__when">Oct 2023 – present</span>
+            <span>Waterford, Ireland</span>
+          </p>
         </div>
         <ul>
           <li><strong>Feature lead for the Egress Gateway initiative</strong> targeting Kuadrant 1.5.
@@ -222,7 +245,11 @@
       <div class="role">
         <div class="role__head">
           <h3>Associate Software Engineer – RHOAM / RHMI</h3>
-          <p class="role__meta">Red Hat · Feb 2021 – Oct 2023 · remote (started as an intern)</p>
+          <p class="role__meta">
+            <span class="role__org">Red Hat</span>
+            <span class="role__when">Feb 2021 – Oct 2023</span>
+            <span>Remote, started as an intern</span>
+          </p>
         </div>
         <ul>
           <li>Delivered a <strong>CVE remediation epic</strong>, resolving several previously undetected
@@ -244,21 +271,21 @@
       <p class="section-lede">
         Nearly everything I do is open source, so you don't have to take my word for any of it.
       </p>
-      <ul class="links">
+      <ul class="index">
         <li>
-          <a href="https://github.com/maksymvavilov" rel="me noopener">github.com/maksymvavilov</a>
-          <span>Commits, reviews and issues across the Kuadrant projects – operators, DNS,
-                gateway policy and developer tooling.</span>
+          <p class="index__term"><a href="https://github.com/maksymvavilov" rel="me noopener">github.com/maksymvavilov</a></p>
+          <p class="index__note">Commits, reviews and issues across the Kuadrant projects – operators, DNS,
+             gateway policy and developer tooling.</p>
         </li>
         <li>
-          <a href="https://gist.github.com/maksymvavilov/542c6344d72a2a7bfbb67ee70cbc7e77" rel="noopener">Good first issues, curated</a>
-          <span>A compiled list of candidate entry-point issues across the project's repositories,
-                validated with a maintainer per repo, to lower the barrier for new contributors.</span>
+          <p class="index__term"><a href="https://gist.github.com/maksymvavilov/542c6344d72a2a7bfbb67ee70cbc7e77" rel="noopener">Good first issues, curated</a></p>
+          <p class="index__note">A compiled list of candidate entry-point issues across the project's repositories,
+             validated with a maintainer per repo, to lower the barrier for new contributors.</p>
         </li>
         <li>
-          <a href="https://gist.github.com/maksymvavilov/68705f0a158d9f0c640d7f50ddb0fa25" rel="noopener">Scale-testing investigation</a>
-          <span>A write-up of how the platform behaves under load, and what I'd change about
-                how we measure it.</span>
+          <p class="index__term"><a href="https://gist.github.com/maksymvavilov/68705f0a158d9f0c640d7f50ddb0fa25" rel="noopener">Scale-testing investigation</a></p>
+          <p class="index__note">A write-up of how the platform behaves under load, and what I'd change about
+             how we measure it.</p>
         </li>
       </ul>
     </div>
@@ -376,7 +403,8 @@
 
 <footer class="site-foot">
   <div class="wrap site-foot__inner">
-    <p>© <span id="year">2026</span> Maksym Vavilov · Waterford, Ireland</p>
+    <p>© <span id="year">2026</span> Maksym Vavilov</p>
+    <p>Waterford, Ireland</p>
     <p>Contracting through Teracotta Trailhead.</p>
   </div>
 </footer>

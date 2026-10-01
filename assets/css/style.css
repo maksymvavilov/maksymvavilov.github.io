@@ -1,7 +1,69 @@
 /* ---------------------------------------------------------------
    Maksym Vavilov — personal site
+
+   The page is built as a readout rather than a brochure: the pitch is
+   that everything here is checkable, so the structure is rules and
+   aligned rows, and the one loud element is the headline. Monospace is
+   reserved for values a machine would produce — hours, dates, ranges —
+   and never used as decoration.
+
    Palette is taken from the MV logo: coral on slate.
    --------------------------------------------------------------- */
+
+/* --- fonts ------------------------------------------------------
+   Self-hosted rather than linked from the Google Fonts CDN: no
+   third-party request on an EU visitor's first paint, and one less
+   origin to connect to. Archivo is a variable face, so 400–700 is a
+   single file per subset. */
+
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/Archivo-400700-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Archivo';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/Archivo-400700-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/IBMPlexMono-400-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../fonts/IBMPlexMono-400-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/IBMPlexMono-500-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('../fonts/IBMPlexMono-500-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
 
 :root {
   --coral:       #fb5a52;
@@ -18,6 +80,7 @@
   --body:        #4a4d55;
   --muted:       #6d7078;
   --line:        #e3e4e8;
+  --rule:        #c9cbd2;   /* heavier than --line, for section starts */
   --bg:          #ffffff;
   --bg-band:     #f7f7f9;
   --card:        #ffffff;
@@ -25,10 +88,22 @@
   --ok:          #1a7f55;
   --error:       #c2362f;
 
-  --wrap:        min(68rem, 100% - 2.5rem);
-  --radius:      12px;
-  --shadow:      0 1px 2px rgba(31, 33, 38, .05),
-                 0 8px 24px -12px rgba(31, 33, 38, .18);
+  --sans: 'Archivo', system-ui, -apple-system, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, "SF Mono", Menlo,
+          Consolas, monospace;
+
+  --wrap:        min(70rem, 100% - 2.5rem);
+
+  /* Two radii, not one. Small controls are nearly square so they read as
+     instruments; only floating panels get the softer corner. */
+  --r-sm:        4px;
+  --r-md:        8px;
+
+  /* Elevation means "this is floating above the page" and nothing else.
+     Anything sitting in the document flow is separated by a rule. */
+  --shadow:      0 1px 2px rgba(31, 33, 38, .06),
+                 0 12px 32px -14px rgba(31, 33, 38, .28);
 
   color-scheme: light;
 }
@@ -46,13 +121,14 @@
     --body:       #b9bcc4;
     --muted:      #8d9199;
     --line:       #303338;
+    --rule:       #454950;
     --bg:         #16181c;
     --bg-band:    #1c1f24;
     --card:       #1e2126;
     --ok:         #5cc99a;
     --error:      #ff7d76;
     --shadow:     0 1px 2px rgba(0, 0, 0, .3),
-                  0 8px 24px -12px rgba(0, 0, 0, .6);
+                  0 12px 32px -14px rgba(0, 0, 0, .7);
 
     color-scheme: dark;
   }
@@ -64,13 +140,14 @@
   --body:       #b9bcc4;
   --muted:      #8d9199;
   --line:       #303338;
+  --rule:       #454950;
   --bg:         #16181c;
   --bg-band:    #1c1f24;
   --card:       #1e2126;
   --ok:         #5cc99a;
   --error:      #ff7d76;
   --shadow:     0 1px 2px rgba(0, 0, 0, .3),
-                0 8px 24px -12px rgba(0, 0, 0, .6);
+                0 12px 32px -14px rgba(0, 0, 0, .7);
 
   color-scheme: dark;
 }
@@ -84,34 +161,51 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--body);
-  font: 400 1.0625rem/1.65 system-ui, -apple-system, "Segoe UI", Roboto,
-        "Helvetica Neue", Arial, sans-serif;
+  font: 400 1.0625rem/1.6 var(--sans);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
 
 .wrap { width: var(--wrap); margin-inline: auto; }
 
-h1, h2, h3 { color: var(--ink); line-height: 1.2; letter-spacing: -.018em; }
-h2 { font-size: clamp(1.5rem, 1.1rem + 1.6vw, 2rem); margin: 0 0 .5rem; }
-h3 { font-size: 1.0625rem; margin: 0 0 .4rem; }
+/* Type scale, 1.25 from a 17px body. Headings tighten as they grow, which
+   is how Archivo wants to be set. */
+h1, h2, h3 { color: var(--ink); }
+
+h2 {
+  font-size: clamp(1.5rem, 1.15rem + 1.5vw, 2.0625rem);
+  font-weight: 650;
+  line-height: 1.12;
+  letter-spacing: -.025em;
+  margin: 0 0 .6rem;
+}
+h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -.012em;
+  margin: 0 0 .4rem;
+}
+
+p { margin: 0 0 1rem; }
+p:last-child { margin-bottom: 0; }
 
 a { color: var(--coral-deep); text-decoration-thickness: 1px; text-underline-offset: 2px; }
 a:hover { color: var(--coral); }
 
 code {
-  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
-  font-size: .9em;
+  font-family: var(--mono);
+  font-size: .875em;
   background: var(--bg-band);
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: var(--r-sm);
   padding: .05em .35em;
 }
 
 :focus-visible {
   outline: 2px solid var(--coral);
   outline-offset: 3px;
-  border-radius: 3px;
+  border-radius: 2px;
 }
 
 .skip-link {
@@ -123,7 +217,7 @@ code {
   z-index: 100;
   background: var(--card);
   padding: .6rem 1rem;
-  border-radius: 8px;
+  border-radius: var(--r-md);
   box-shadow: var(--shadow);
 }
 
@@ -151,18 +245,17 @@ code {
   display: inline-flex;
   align-items: center;
   gap: .6rem;
-  font-weight: 650;
   color: var(--ink);
   text-decoration: none;
-  letter-spacing: -.01em;
 }
-.brand img { border-radius: 7px; display: block; }
+.brand img { border-radius: var(--r-sm); display: block; }
 
 /* Deliberately quiet: the name is here for people who arrive by referral,
    not as the headline. The hero leads with the service instead. */
 .brand__name {
   font-size: .9375rem;
-  font-weight: 550;
+  font-weight: 500;
+  letter-spacing: -.005em;
   color: var(--muted);
 }
 .brand:hover .brand__name { color: var(--ink); }
@@ -182,20 +275,21 @@ code {
 
 .nav-cta {
   color: var(--ink) !important;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: .35rem .85rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  padding: .35rem .8rem;
+  font-weight: 500;
 }
 .nav-cta:hover { border-color: var(--coral); color: var(--coral-deep) !important; }
 
 .theme-toggle {
   display: inline-grid;
   place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
+  width: 2.1rem;
+  height: 2.1rem;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--r-sm);
   background: var(--card);
   color: var(--body);
   cursor: pointer;
@@ -221,72 +315,141 @@ code {
 
 /* --- hero ------------------------------------------------------ */
 
-.hero { padding-block: clamp(2.5rem, 1rem + 6vw, 5.5rem) clamp(2rem, 1rem + 4vw, 4rem); }
+.hero { padding-block: clamp(2.5rem, 1rem + 6vw, 5rem) 0; }
 
+/* The headline and the readout span the full measure; the portrait sits
+   beside the body copy rather than beside the headline, so nothing
+   competes with the one big thing on the page. The third track is empty
+   on purpose — it keeps the text at a readable measure and the portrait
+   next to it, and lets the right-hand space read as margin rather than
+   as a hole between two blocks. */
 .hero__inner {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 36rem) auto minmax(0, 1fr);
+  column-gap: clamp(1.75rem, 4vw, 3rem);
+  align-items: start;
+}
+.hero__status,
+.hero h1,
+.hero__readout { grid-column: 1 / -1; }
+.hero__body { grid-column: 1; }
+
+.hero__status {
+  display: flex;
   align-items: center;
-  gap: clamp(1.5rem, 4vw, 3.5rem);
+  gap: .55rem;
+  margin: 0 0 1.1rem;
+  font-size: .9375rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.hero__status .dot {
+  width: .5rem; height: .5rem;
+  border-radius: 50%;
+  background: var(--coral);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 20%, transparent);
 }
 
 .hero h1 {
-  font-size: clamp(2rem, 1.2rem + 3.6vw, 3.1rem);
-  margin: .75rem 0 1rem;
-  letter-spacing: -.03em;
+  font-size: clamp(2.35rem, 1.1rem + 5vw, 4.25rem);
+  font-weight: 700;
+  line-height: .98;
+  letter-spacing: -.038em;
+  margin: 0 0 1.25rem;
+  text-wrap: balance;
 }
 
 .tagline {
-  font-size: clamp(1.1875rem, 1rem + .9vw, 1.5rem);
-  line-height: 1.35;
+  font-size: clamp(1.1875rem, 1rem + .85vw, 1.4375rem);
+  line-height: 1.3;
   font-weight: 450;
+  letter-spacing: -.012em;
   color: var(--ink);
-  max-width: 22em;
-  margin: 0 0 1.25rem;
-  padding-left: 1rem;
-  border-left: 3px solid var(--coral);
+  max-width: 24em;
+  margin: 0 0 1rem;
 }
 
 .lede {
-  font-size: clamp(1rem, .95rem + .25vw, 1.0625rem);
-  max-width: 36em;
+  font-size: 1.0625rem;
+  max-width: 64ch;
   margin: 0;
 }
 
+/* Pinned explicitly. Grid places definite-row items before auto-placed
+   ones, so without the column it would take the body's cell. */
 .hero__photo {
-  width: clamp(9rem, 20vw, 13.5rem);
+  grid-row: 3;
+  grid-column: 2;
+  width: clamp(8rem, 17vw, 12.5rem);
   height: auto;
   aspect-ratio: 1;
-  border-radius: 50%;
+  border-radius: var(--r-md);
   object-fit: cover;
-  box-shadow: var(--shadow);
-  outline: 4px solid var(--card);
+  border: 1px solid var(--line);
+}
+
+/* --- the readout ------------------------------------------------
+   The three numbers a buyer needs before they read anything else.
+   Values are set in mono because they are measurements, not prose. */
+
+.hero__readout {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0 clamp(1.5rem, 3vw, 2.75rem);
+  margin: clamp(2.5rem, 5vw, 3.75rem) 0 0;
+  padding-top: 1.1rem;
+  border-top: 2px solid var(--rule);
+}
+.hero__readout > div + div {
+  border-left: 1px solid var(--line);
+  padding-left: clamp(1.5rem, 3vw, 2.75rem);
+  margin-left: calc(-1 * clamp(1.5rem, 3vw, 2.75rem) / 2);
+}
+.hero__readout dt {
+  font-size: .8125rem;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: .35rem;
+}
+.hero__readout dd {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 500;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  letter-spacing: -.02em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.hero__readout .readout__note {
+  display: block;
+  margin-top: .3rem;
+  font-family: var(--sans);
+  font-weight: 400;
+  font-size: .875rem;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.hero__caveat {
+  margin: 1.1rem 0 0;
+  font-size: .9375rem;
+  color: var(--muted);
+  max-width: 62ch;
 }
 
 @media (max-width: 46rem) {
   .hero__inner { grid-template-columns: 1fr; }
-  .hero__photo { order: -1; width: 7.5rem; }
-}
-
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-  margin: 0;
-  font-size: .8125rem;
-  font-weight: 550;
-  letter-spacing: .01em;
-  color: var(--ink);
-  background: color-mix(in srgb, var(--coral) 12%, transparent);
-  border: 1px solid color-mix(in srgb, var(--coral) 35%, transparent);
-  border-radius: 999px;
-  padding: .3rem .8rem .3rem .65rem;
-}
-.badge .dot {
-  width: .5rem; height: .5rem;
-  border-radius: 50%;
-  background: var(--coral);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 22%, transparent);
+  .hero__body { grid-column: 1; }
+  .hero__photo { grid-row: auto; grid-column: 1; order: -1; width: 6.5rem; margin-bottom: 1.25rem; }
+  .hero__readout { grid-template-columns: 1fr; gap: 1.1rem; }
+  .hero__readout > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+    padding-left: 0;
+    padding-top: 1.1rem;
+    margin-left: 0;
+  }
 }
 
 .hero__actions {
@@ -298,17 +461,19 @@ code {
 
 .btn {
   display: inline-block;
-  padding: .65rem 1.25rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
+  padding: .6rem 1.15rem;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
   background: var(--card);
   color: var(--ink);
+  font-family: inherit;
   font-size: .9375rem;
   font-weight: 550;
+  letter-spacing: -.005em;
   text-decoration: none;
-  transition: border-color .15s, transform .15s, background-color .15s;
+  transition: border-color .15s, background-color .15s;
 }
-.btn:hover { border-color: var(--coral); color: var(--ink); transform: translateY(-1px); }
+.btn:hover { border-color: var(--coral); color: var(--ink); }
 
 .btn--primary {
   background: var(--btn);
@@ -321,11 +486,9 @@ code {
   color: #fff;
 }
 
-@media (prefers-reduced-motion: reduce) { .btn:hover { transform: none; } }
-
 /* --- sections -------------------------------------------------- */
 
-section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
+section { padding-block: clamp(3rem, 1.5rem + 4.5vw, 5rem); }
 
 .band {
   background: var(--bg-band);
@@ -333,81 +496,93 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 }
 
 .section-lede {
-  max-width: 46em;
-  margin: 0 0 2rem;
+  max-width: 62ch;
+  margin: 0 0 2.25rem;
   color: var(--muted);
 }
 
-/* --- service cards --------------------------------------------- */
+/* --- index rows -------------------------------------------------
+   Used for the capability list and for public work. Hierarchy comes
+   from the type and the alignment, not from boxing each item up. */
 
-.cards {
+.index {
   list-style: none;
   margin: 0;
   padding: 0;
+  border-top: 1px solid var(--rule);
+}
+.index > li {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-  gap: 1rem;
+  grid-template-columns: minmax(0, 15rem) minmax(0, 1fr);
+  gap: .35rem clamp(1.5rem, 4vw, 3rem);
+  padding-block: 1.3rem;
+  border-bottom: 1px solid var(--line);
+}
+.index h3 { margin: 0; }
+.index p { margin: 0; max-width: 64ch; }
+.index__term { font-weight: 600; color: var(--ink); letter-spacing: -.012em; }
+.index__note { font-size: .9375rem; color: var(--muted); }
+
+@media (max-width: 44rem) {
+  .index > li { grid-template-columns: 1fr; }
 }
 
-.card {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 1.35rem 1.4rem;
-  position: relative;
-  overflow: hidden;
-}
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 3px;
-  background: var(--coral);
-  opacity: 0;
-  transition: opacity .15s;
-}
-.card:hover::before { opacity: 1; }
-.card p { margin: 0; font-size: .9375rem; }
-
-/* --- how I work ------------------------------------------------ */
+/* --- how I work ------------------------------------------------
+   The terms belong together as one object, so this is a panel rather
+   than another full-width index: five rows of a short contract summary,
+   read as a unit and sized to be read in one go. */
 
 .facts {
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
-  gap: 1.25rem 2rem;
+  max-width: 46rem;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
+  padding: .4rem clamp(1.1rem, 3vw, 1.6rem);
 }
 .facts > div {
-  border-top: 2px solid var(--line);
-  padding-top: .85rem;
+  display: grid;
+  grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+  gap: .15rem 1.5rem;
+  padding-block: .9rem;
+  border-bottom: 1px solid var(--line);
 }
+.facts > div:last-child { border-bottom: 0; }
 .facts dt {
-  font-size: .75rem;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--coral-deep);
-  margin-bottom: .3rem;
+  margin: 0;
+  font-size: .9375rem;
+  font-weight: 500;
+  color: var(--muted);
 }
-.facts dd { margin: 0; font-size: .9375rem; }
+.facts dd {
+  margin: 0;
+  font-size: .9375rem;
+  color: var(--ink);
+}
 
-/* --- quote ----------------------------------------------------- */
+@media (max-width: 34rem) {
+  .facts > div { grid-template-columns: 1fr; gap: .25rem; }
+}
+
+/* --- quote ------------------------------------------------------
+   The only left rule on the page, because it is the only quotation. */
 
 .quote {
   margin: 0 0 2.5rem;
-  padding: 1.25rem 0 1.25rem 1.5rem;
-  border-left: 3px solid var(--coral);
+  padding: .25rem 0 .25rem 1.5rem;
+  border-left: 2px solid var(--coral);
 }
 .quote blockquote { margin: 0; }
 .quote p {
   margin: 0;
-  font-size: clamp(1.0625rem, 1rem + .5vw, 1.3rem);
-  font-style: italic;
+  font-size: clamp(1.125rem, 1rem + .6vw, 1.375rem);
+  line-height: 1.35;
+  letter-spacing: -.015em;
   color: var(--ink);
-  max-width: 34em;
+  max-width: 34ch;
 }
 .quote figcaption {
-  margin-top: .6rem;
+  margin-top: .65rem;
   font-size: .875rem;
   color: var(--muted);
 }
@@ -415,47 +590,45 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 /* --- roles ----------------------------------------------------- */
 
 .role {
-  padding-top: 1.75rem;
-  margin-top: 1.75rem;
+  padding-top: 1.85rem;
+  margin-top: 1.85rem;
   border-top: 1px solid var(--line);
 }
 .role:first-of-type { border-top: 0; padding-top: 0; margin-top: 0; }
 
-.role__head { margin-bottom: .9rem; }
-.role__head h3 { font-size: 1.1875rem; }
+.role__head { margin-bottom: 1rem; }
+.role__head h3 {
+  font-size: 1.1875rem;
+  letter-spacing: -.018em;
+}
+
+/* Organisation, dates and place, set apart by alignment and by the
+   change of face on the dates — no middots. */
 .role__meta {
-  margin: .25rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: .3rem 1.4rem;
+  margin: .4rem 0 0;
   font-size: .875rem;
   color: var(--muted);
+}
+.role__org { font-weight: 550; color: var(--ink); }
+.role__when {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.02em;
+  color: var(--body);
 }
 
 .role ul {
   margin: 0;
   padding-left: 1.15rem;
   display: grid;
-  gap: .6rem;
+  gap: .65rem;
 }
-.role li { font-size: .9375rem; }
+.role li { font-size: .9375rem; max-width: 76ch; }
 .role strong { color: var(--ink); font-weight: 600; }
-
-/* --- links ------------------------------------------------------ */
-
-.links {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.25rem;
-}
-.links li {
-  display: grid;
-  gap: .25rem;
-  padding-left: 1rem;
-  border-left: 2px solid var(--line);
-}
-.links li:hover { border-left-color: var(--coral); }
-.links a { font-weight: 600; }
-.links span { font-size: .9375rem; color: var(--muted); }
 
 /* --- contact --------------------------------------------------- */
 
@@ -471,14 +644,16 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 }
 
 .contact__aside h3 {
-  font-size: .75rem;
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: .07em;
-  color: var(--coral-deep);
-  margin-bottom: .9rem;
+  font-size: .9375rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 .75rem;
+  padding-bottom: .55rem;
+  border-bottom: 1px solid var(--line);
 }
-.contact__subhead { margin-top: 2rem; }
+/* Needs the extra class to outrank `.contact__aside h3` above, which
+   would otherwise reset the top margin back to zero. */
+.contact__aside .contact__subhead { margin-top: 2rem; }
 
 .contact__links {
   display: flex;
@@ -498,7 +673,8 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   margin: 0;
 }
 .emailrow__addr {
-  font-size: .9375rem;
+  font-family: var(--mono);
+  font-size: .875rem;
   color: var(--body);
   text-decoration-color: var(--line);
   overflow-wrap: anywhere;
@@ -513,7 +689,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   height: 1.85rem;
   padding: 0;
   border: 1px solid var(--line);
-  border-radius: 7px;
+  border-radius: var(--r-sm);
   background: var(--card);
   color: var(--muted);
   cursor: pointer;
@@ -532,11 +708,11 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   max-width: calc(100% - 2rem);
   padding: .65rem 1.1rem;
   border: 1px solid var(--line);
-  border-radius: 999px;
+  border-radius: var(--r-md);
   background: var(--card);
   color: var(--ink);
   font-size: .875rem;
-  font-weight: 550;
+  font-weight: 500;
   box-shadow: var(--shadow);
 
   /* Hidden but still in the accessibility tree, so role="status" can
@@ -560,10 +736,9 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 
 .form {
   background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-md);
   padding: clamp(1.25rem, 3vw, 1.85rem);
-  box-shadow: var(--shadow);
 }
 
 .form__row {
@@ -590,11 +765,11 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   color: var(--ink);
   background: var(--bg);
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: var(--r-sm);
   padding: .6rem .75rem;
   transition: border-color .15s, box-shadow .15s;
 }
-.field textarea { resize: vertical; min-height: 6.5rem; }
+.field textarea { resize: vertical; min-height: 7rem; line-height: 1.55; }
 
 .field input::placeholder,
 .field textarea::placeholder { color: var(--muted); }
@@ -645,7 +820,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   width: min(38rem, 100% - 2rem);
   padding: clamp(1.25rem, 3vw, 1.75rem);
   border: 1px solid var(--line);
-  border-radius: var(--radius);
+  border-radius: var(--r-md);
   background: var(--bg-band);
   color: var(--body);
   box-shadow: 0 24px 64px -16px rgba(0, 0, 0, .45);
@@ -670,7 +845,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   width: 2rem; height: 2rem;
   padding: 0;
   border: 1px solid transparent;
-  border-radius: 999px;
+  border-radius: var(--r-sm);
   background: none;
   color: var(--muted);
   cursor: pointer;
@@ -681,7 +856,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   margin: .5rem 0 1.25rem;
   font-size: .9375rem;
   color: var(--muted);
-  max-width: 40em;
+  max-width: 58ch;
 }
 
 /* Inside the dialog the card framing is redundant. */
@@ -689,7 +864,6 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   padding: 0;
   border: 0;
   background: none;
-  box-shadow: none;
 }
 #form-dialog .field input,
 #form-dialog .field textarea { background: var(--card); }
@@ -700,11 +874,13 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   padding-block: clamp(3rem, 2rem + 8vw, 7rem);
 }
 .thanks h1 {
-  font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.6rem);
-  margin: .9rem 0 1rem;
-  letter-spacing: -.03em;
+  font-size: clamp(2rem, 1.2rem + 3.2vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.02;
+  letter-spacing: -.035em;
+  margin: 1.1rem 0 1.1rem;
 }
-.thanks .lede { max-width: 34em; }
+.thanks .lede { max-width: 58ch; }
 
 /* --- footer ---------------------------------------------------- */
 
@@ -717,7 +893,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 .site-foot__inner {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem 2rem;
+  gap: .4rem 2rem;
   justify-content: space-between;
 }
 .site-foot p { margin: 0; }
