@@ -319,13 +319,12 @@ code {
 
 /* The headline and the readout span the full measure; the portrait sits
    beside the body copy rather than beside the headline, so nothing
-   competes with the one big thing on the page. The third track is empty
-   on purpose — it keeps the text at a readable measure and the portrait
-   next to it, and lets the right-hand space read as margin rather than
-   as a hole between two blocks. */
+   competes with the one big thing on the page. Both outer edges are
+   flush with the wrap, and the portrait is sized so what's left between
+   the two blocks reads as a gutter rather than a gap. */
 .hero__inner {
   display: grid;
-  grid-template-columns: minmax(0, 36rem) auto minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) auto;
   column-gap: clamp(1.75rem, 4vw, 3rem);
   align-items: start;
 }
@@ -371,7 +370,7 @@ code {
 
 .lede {
   font-size: 1.0625rem;
-  max-width: 64ch;
+  max-width: 68ch;
   margin: 0;
 }
 
@@ -380,7 +379,7 @@ code {
 .hero__photo {
   grid-row: 3;
   grid-column: 2;
-  width: clamp(8rem, 17vw, 12.5rem);
+  width: clamp(8rem, 22vw, 18rem);
   height: auto;
   aspect-ratio: 1;
   border-radius: var(--r-md);
