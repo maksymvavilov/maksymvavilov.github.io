@@ -6,6 +6,13 @@
 :root {
   --coral:       #fb5a52;
   --coral-deep:  #c2362f;   /* passes AA on light backgrounds */
+
+  /* Solid buttons need their own shade: white text on --coral is only
+     3.14:1, well under the 4.5:1 AA floor. This is the same terracotta
+     taken down in lightness and saturation — calmer to look at, and it
+     clears AA at 4.62:1. Accent and link colours are unchanged. */
+  --btn:         #c54f34;
+  --btn-hover:   #ad462e;
   --slate:       #45474d;
   --ink:         #1f2126;
   --body:        #4a4d55;
@@ -15,14 +22,25 @@
   --bg-band:     #f7f7f9;
   --card:        #ffffff;
 
+  --ok:          #1a7f55;
+  --error:       #c2362f;
+
   --wrap:        min(68rem, 100% - 2.5rem);
   --radius:      12px;
   --shadow:      0 1px 2px rgba(31, 33, 38, .05),
                  0 8px 24px -12px rgba(31, 33, 38, .18);
+
+  color-scheme: light;
 }
 
+/* Dark values live in two places on purpose. The media query is the default
+   (follow the OS, as before); the attribute is an explicit choice made with
+   the header toggle and stored in localStorage. `:not([data-theme="light"])`
+   is what lets that choice override the OS in the other direction too.
+   Keep the two blocks in step. */
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --coral-deep: #ff7d76;
     --ink:        #f0f1f4;
     --body:       #b9bcc4;
@@ -31,9 +49,30 @@
     --bg:         #16181c;
     --bg-band:    #1c1f24;
     --card:       #1e2126;
+    --ok:         #5cc99a;
+    --error:      #ff7d76;
     --shadow:     0 1px 2px rgba(0, 0, 0, .3),
                   0 8px 24px -12px rgba(0, 0, 0, .6);
+
+    color-scheme: dark;
   }
+}
+
+:root[data-theme="dark"] {
+  --coral-deep: #ff7d76;
+  --ink:        #f0f1f4;
+  --body:       #b9bcc4;
+  --muted:      #8d9199;
+  --line:       #303338;
+  --bg:         #16181c;
+  --bg-band:    #1c1f24;
+  --card:       #1e2126;
+  --ok:         #5cc99a;
+  --error:      #ff7d76;
+  --shadow:     0 1px 2px rgba(0, 0, 0, .3),
+                0 8px 24px -12px rgba(0, 0, 0, .6);
+
+  color-scheme: dark;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -149,6 +188,31 @@ code {
 }
 .nav-cta:hover { border-color: var(--coral); color: var(--coral-deep) !important; }
 
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--body);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.theme-toggle:hover { border-color: var(--coral); color: var(--coral-deep); }
+.theme-toggle svg { grid-area: 1 / 1; }
+
+/* Show the icon for the theme you'd be switching *to*. */
+.theme-toggle__sun { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle__sun { display: block; }
+  :root:not([data-theme="light"]) .theme-toggle__moon { display: none; }
+}
+:root[data-theme="dark"] .theme-toggle__sun { display: block; }
+:root[data-theme="dark"] .theme-toggle__moon { display: none; }
+
 @media (max-width: 40rem) {
   .site-head { position: static; }
   .site-head__inner { padding-block: .75rem; }
@@ -225,7 +289,7 @@ code {
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 22%, transparent);
 }
 
-.hero__actions, .contact__actions {
+.hero__actions {
   display: flex;
   flex-wrap: wrap;
   gap: .75rem;
@@ -247,13 +311,13 @@ code {
 .btn:hover { border-color: var(--coral); color: var(--ink); transform: translateY(-1px); }
 
 .btn--primary {
-  background: var(--coral);
-  border-color: var(--coral);
+  background: var(--btn);
+  border-color: var(--btn);
   color: #fff;
 }
 .btn--primary:hover {
-  background: #e8483f;
-  border-color: #e8483f;
+  background: var(--btn-hover);
+  border-color: var(--btn-hover);
   color: #fff;
 }
 
@@ -272,13 +336,6 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
   max-width: 46em;
   margin: 0 0 2rem;
   color: var(--muted);
-}
-
-.subhead {
-  font-size: 1.125rem;
-  margin: 3rem 0 1rem;
-  padding-top: 1.75rem;
-  border-top: 1px solid var(--line);
 }
 
 /* --- service cards --------------------------------------------- */
@@ -381,9 +438,7 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 .role li { font-size: .9375rem; }
 .role strong { color: var(--ink); font-weight: 600; }
 
-.role--minor ul li { color: var(--muted); }
-
-/* --- links & education ----------------------------------------- */
+/* --- links ------------------------------------------------------ */
 
 .links {
   list-style: none;
@@ -402,20 +457,254 @@ section { padding-block: clamp(2.75rem, 1.5rem + 4vw, 4.5rem); }
 .links a { font-weight: 600; }
 .links span { font-size: .9375rem; color: var(--muted); }
 
-.edu {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: .5rem;
-  font-size: .9375rem;
-}
-.edu strong { color: var(--ink); font-weight: 600; }
-.edu span { color: var(--muted); }
-
 /* --- contact --------------------------------------------------- */
 
-.contact__fallback { font-size: .9375rem; margin-top: 1rem; }
+.contact {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+  gap: clamp(1.75rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+@media (max-width: 48rem) {
+  .contact { grid-template-columns: 1fr; }
+}
+
+.contact__aside h3 {
+  font-size: .75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: var(--coral-deep);
+  margin-bottom: .9rem;
+}
+.contact__subhead { margin-top: 2rem; }
+
+.contact__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 0;
+}
+.contact__fallback { font-size: .9375rem; margin: 0; }
+
+/* The email sits one step down from the form: present and easy to take,
+   but not competing with the primary action. */
+.emailrow {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.emailrow__addr {
+  font-size: .9375rem;
+  color: var(--body);
+  text-decoration-color: var(--line);
+  overflow-wrap: anywhere;
+}
+.emailrow__addr:hover { color: var(--coral-deep); text-decoration-color: currentColor; }
+
+.emailrow__copy {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--card);
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.emailrow__copy:hover { border-color: var(--coral); color: var(--coral-deep); }
+
+/* --- toast ------------------------------------------------------ */
+
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  z-index: 100;
+  translate: -50% 0;
+  max-width: calc(100% - 2rem);
+  padding: .65rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink);
+  font-size: .875rem;
+  font-weight: 550;
+  box-shadow: var(--shadow);
+
+  /* Hidden but still in the accessibility tree, so role="status" can
+     announce the text change when it appears. */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(.5rem);
+  transition: opacity .18s, transform .18s, visibility .18s;
+}
+.toast.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast { transition: none; transform: none; }
+  .toast.is-visible { transform: none; }
+}
+
+/* --- form ------------------------------------------------------- */
+
+.form {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 3vw, 1.85rem);
+  box-shadow: var(--shadow);
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+  gap: 0 1rem;
+}
+
+.field { margin: 0 0 1rem; }
+.field label {
+  display: block;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: .35rem;
+}
+.field__opt { font-weight: 400; color: var(--muted); }
+
+.field input,
+.field textarea {
+  width: 100%;
+  font: inherit;
+  font-size: .9375rem;
+  color: var(--ink);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .6rem .75rem;
+  transition: border-color .15s, box-shadow .15s;
+}
+.field textarea { resize: vertical; min-height: 6.5rem; }
+
+.field input::placeholder,
+.field textarea::placeholder { color: var(--muted); }
+
+.field input:focus-visible,
+.field textarea:focus-visible {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--coral) 22%, transparent);
+}
+
+/* Only scold people once they've actually tried to send. */
+.form:not(.is-submitted) :invalid { box-shadow: none; }
+.form.is-submitted :invalid { border-color: var(--error); }
+
+/* Honeypot — off-screen rather than display:none, which some bots check for. */
+.form__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px; height: 1px;
+  overflow: hidden;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .75rem 1rem;
+  margin: 0;
+}
+.form__actions button { cursor: pointer; }
+.form__actions button[disabled] { opacity: .6; cursor: progress; }
+
+.form__note { font-size: .8125rem; color: var(--muted); }
+
+.form__status {
+  margin: 0;
+  font-size: .9375rem;
+}
+.form__status:empty { display: none; }
+.form__status.is-pending { margin-top: 1rem; color: var(--muted); }
+.form__status.is-ok      { margin-top: 1rem; color: var(--ok); font-weight: 550; }
+.form__status.is-error   { margin-top: 1rem; color: var(--error); }
+
+/* --- dialog ----------------------------------------------------- */
+
+#form-dialog {
+  width: min(38rem, 100% - 2rem);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--bg-band);
+  color: var(--body);
+  box-shadow: 0 24px 64px -16px rgba(0, 0, 0, .45);
+}
+#form-dialog::backdrop {
+  background: rgba(15, 16, 20, .55);
+  backdrop-filter: blur(2px);
+}
+
+.dialog__head {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.dialog__head h2 { font-size: 1.375rem; margin: 0; }
+
+.dialog__close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 2rem; height: 2rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  cursor: pointer;
+}
+.dialog__close:hover { color: var(--ink); border-color: var(--line); }
+
+.dialog__lede {
+  margin: .5rem 0 1.25rem;
+  font-size: .9375rem;
+  color: var(--muted);
+  max-width: 40em;
+}
+
+/* Inside the dialog the card framing is redundant. */
+#form-dialog .form {
+  padding: 0;
+  border: 0;
+  background: none;
+  box-shadow: none;
+}
+#form-dialog .field input,
+#form-dialog .field textarea { background: var(--card); }
+
+/* --- thank-you page --------------------------------------------- */
+
+.thanks {
+  padding-block: clamp(3rem, 2rem + 8vw, 7rem);
+}
+.thanks h1 {
+  font-size: clamp(1.75rem, 1.2rem + 2.6vw, 2.6rem);
+  margin: .9rem 0 1rem;
+  letter-spacing: -.03em;
+}
+.thanks .lede { max-width: 34em; }
 
 /* --- footer ---------------------------------------------------- */
 

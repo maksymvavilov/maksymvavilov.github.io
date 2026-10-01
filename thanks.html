@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Message sent — Maksym Vavilov</title>
+<meta name="description" content="Your message has been sent.">
+<meta name="robots" content="noindex">
+
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<script>
+  // Runs before first paint so a dark-mode visitor never sees a white flash.
+  (function () {
+    try {
+      var saved = localStorage.getItem('theme');
+      if (saved === 'light' || saved === 'dark') {
+        document.documentElement.dataset.theme = saved;
+      }
+    } catch (e) { /* private mode: fall back to the OS preference */ }
+  })();
+</script>
+</head>
+<body>
+
+<header class="site-head">
+  <div class="wrap site-head__inner">
+    <a class="brand" href="./" aria-label="Maksym Vavilov — home">
+      <img src="assets/img/mv.png" alt="" width="32" height="32">
+      <span class="brand__name">Maksym Vavilov</span>
+    </a>
+  </div>
+</header>
+
+<main id="main">
+  <section class="thanks">
+    <div class="wrap">
+      <p class="badge"><span class="dot" aria-hidden="true"></span>Message sent</p>
+      <h1>Thanks — that's with me.</h1>
+      <p class="lede">
+        I read everything that comes through here, and I'll come back to you within a day
+        or two. If it's urgent, or you'd rather carry on over email, reply to the copy
+        that's just landed in your inbox.
+      </p>
+      <p class="hero__actions">
+        <a class="btn btn--primary" href="./">Back to the site</a>
+        <a class="btn" href="https://www.linkedin.com/in/maksym-vavilov-65702b206" rel="me noopener">LinkedIn</a>
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer class="site-foot">
+  <div class="wrap site-foot__inner">
+    <p>© <span id="year">2026</span> Maksym Vavilov · Waterford, Ireland</p>
+    <p>Contracting through Teracotta Trailhead.</p>
+  </div>
+</footer>
+
+<script>
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
